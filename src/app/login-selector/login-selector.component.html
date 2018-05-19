@@ -1,3 +1,22 @@
-<p>
-  login-selector works!
-</p>
+<div class="card">
+  <div class="card-body">
+    <ngb-accordion>
+      <ngb-panel>
+        <ng-template ngbPanelTitle>
+          <b>Logins:</b> {{selectionForPanel}}
+        </ng-template>
+        <ng-template ngbPanelContent>
+          <button type="button" class="btn btn-dark" (click)=onAll()>All</button>
+          <button type="button" class="btn btn-dark" (click)=onNone()>None</button>
+          <div class="btn-group btn-group-toggle" (change)="onChange()">
+            <label *ngFor="let login of logins" class="btn-light" ngbButtonLabel>
+              <input type="checkbox" ngbButton [(ngModel)]="selectedLogins[login]">{{login}}
+            </label>
+          </div>
+          <hr>
+          <pre>{{selectedLogins | json}}</pre>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+  </div>
+</div>
