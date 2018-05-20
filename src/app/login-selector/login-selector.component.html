@@ -3,7 +3,7 @@
     <ngb-accordion>
       <ngb-panel>
         <ng-template ngbPanelTitle>
-          <b>Logins:</b> {{selectionForPanel}}
+          <b>Logins:</b> <span innerHTML="{{selectionForPanel}}"></span>
         </ng-template>
         <ng-template ngbPanelContent>
           <button type="button" class="btn btn-dark" (click)=onAll()>All</button>

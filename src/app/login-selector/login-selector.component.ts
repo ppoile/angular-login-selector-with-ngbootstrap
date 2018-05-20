@@ -54,6 +54,7 @@ export class LoginSelectorComponent implements OnInit {
     for (let login of showLoginsAsString.split(',')) {
       if (login === '')
         continue;
+      console.log(`select '${login}'`);
       this.selectedLogins[login] = true;
     }
   }
@@ -69,7 +70,7 @@ export class LoginSelectorComponent implements OnInit {
   }
 
   selectNone() {
-    console.log('selectNone:');
+    console.log('select none');
     for (let login of this.logins) {
       this.selectedLogins[login] = false;
     }
@@ -116,7 +117,33 @@ export class LoginSelectorComponent implements OnInit {
     else if (selection === this.showNoLoginsAsString) {
       selection = '(None)';
     }
+    else {
+      selection = this.getShortestLoginSelection();
+    }
     this.selectionForPanel = selection;
-    console.log(this.selectionForPanel);
+    console.log(`selectionForPanel: '${this.selectionForPanel}'`);
+
+  }
+
+  getShortestLoginSelection() {
+    const numAll = this.logins.length;
+    const numSelected = this.showLoginsAsString.split(',').length;
+    const numDeselected = numAll - numSelected;
+    if (numDeselected < numSelected) {
+      return '<strike>' + this.getDeselectedLogins().join(',') + '</strike>';
+    }
+    else {
+      return this.showLoginsAsString;
+    }
+  }
+
+  getDeselectedLogins() {
+    let deselectedLogins = [];
+    for (let login of this.logins) {
+      if (!this.selectedLogins[login]) {
+        deselectedLogins.push(login);
+      }
+    }
+    return deselectedLogins;
   }
 }
