@@ -11,9 +11,11 @@ import { AppComponent } from './app.component';
 import { InMemoryDataService }  from './in-memory-data.service';
 import { LoginSelectorComponent } from './login-selector/login-selector.component';
 import { TestResultsComponent } from './test-results/test-results.component';
+import { LoginsComponent } from './logins/logins.component';
 
 const routes: Routes = [
   { path: 'testresults', component: TestResultsComponent },
+  { path: 'logins', component: LoginsComponent },
   { path: '', redirectTo: '/testresults', pathMatch: 'full' },
 ];
 
@@ -21,6 +23,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
+    LoginsComponent,
     LoginSelectorComponent,
     TestResultsComponent,
   ],

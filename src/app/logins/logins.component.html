@@ -1,0 +1,19 @@
+<h2>My Heroes</h2>
+<ul class="logins">
+  <li *ngFor="let login of logins" (click)="onSelect(login)">
+    <span class="badge">{{login.id}}</span>{{login.name}}
+  </li>
+</ul>
+
+<div *ngIf="selectedLogin; else no_login_selected" >
+  <h2>{{selectedLogin.name | uppercase}} Details</h2>
+  <div>
+    <span>id:</span>{{selectedLogin.id}}
+  </div>
+  <div>
+    <label>name:
+      <input [(ngModel)]="selectedLogin.name" placeholder="name">
+    </label>
+  </div>
+</div>
+<ng-template #no_login_selected>No login selected.</ng-template>
