@@ -7,10 +7,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { LoginSelectorComponent } from './login-selector/login-selector.component';
+import { TestResultsComponent } from './test-results/test-results.component';
 
 const routes: Routes = [
-  { path: 'ttt', component: LoginSelectorComponent },
-  { path: '', redirectTo: '/ttt', pathMatch: 'full' },
+  { path: 'testresults', component: TestResultsComponent },
+  { path: '', redirectTo: '/testresults', pathMatch: 'full' },
 ];
 
 
@@ -18,6 +19,7 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     LoginSelectorComponent,
+    TestResultsComponent,
   ],
   imports: [
     BrowserModule,
