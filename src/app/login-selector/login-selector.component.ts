@@ -1,18 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap, NavigationExtras } from '@angular/router';
 
+import { Login } from '../login';
+import { LoginService } from '../login.service';
+
 @Component({
   selector: 'app-login-selector',
   templateUrl: './login-selector.component.html',
   styleUrls: ['./login-selector.component.css']
 })
 export class LoginSelectorComponent implements OnInit {
-
-  logins = [
-    'Dover',
-    'London',
-    'London Kraftwerk',
-  ];
+  logins: Login[] = [];
   selectedLogins = { };
   selectionForPanel: string;
   showNoLoginsAsString = '';
@@ -21,11 +19,10 @@ export class LoginSelectorComponent implements OnInit {
   showLoginsAsString: string;
 
   constructor(private activatedRoute: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private loginService: LoginService) {
     console.log('constructor:');
-    this.logins.sort();
-    this.showAllLoginsAsString = this.logins.join(',');
-    this.showDefaultLoginsAsString = this.showAllLoginsAsString;
+    this.updateLoginsAndHelpers(this.logins);
     this.activatedRoute.queryParamMap.subscribe(queryParams => {
       console.log('queryParams:');
       console.log(queryParams);
@@ -35,6 +32,7 @@ export class LoginSelectorComponent implements OnInit {
 
   ngOnInit() {
     console.log('ngOnInit:');
+    this.getLogins();
   }
 
   parseQueryParams(params: ParamMap) {
@@ -61,36 +59,34 @@ export class LoginSelectorComponent implements OnInit {
 
   onAll() {
     console.log('onAll:');
+    console.log(this.showAllLoginsAsString)
     this.updateShowLogins(this.showAllLoginsAsString);
+    this.evalSelection();
   }
 
   onNone() {
     console.log('onNone:');
     this.updateShowLogins(this.showNoLoginsAsString);
+    this.evalSelection();
   }
 
   selectNone() {
     console.log('select none');
     for (let login of this.logins) {
-      this.selectedLogins[login] = false;
+      this.selectedLogins[login.name] = false;
     }
   }
 
   onChange() {
     console.log('onChange:');
     console.log(this.selectedLogins);
-    let selectedLogins = [];
-    for (let login of this.logins) {
-      if (this.selectedLogins[login]) {
-        selectedLogins.push(login);
-      }
-    }
-    let showLoginsAsString = selectedLogins.join(',');
+    let showLoginsAsString = this.getSelectedLogins().join(',');
     console.log(showLoginsAsString);
     this.updateShowLogins(showLoginsAsString)
+    this.evalSelection();
   }
 
-  updateShowLogins(showLoginsAsString: string)
+  private updateShowLogins(showLoginsAsString: string)
   {
     console.log('updateShowLogins:');
     console.log(showLoginsAsString);
@@ -99,15 +95,16 @@ export class LoginSelectorComponent implements OnInit {
     if (showLoginsAsString === this.showDefaultLoginsAsString) {
       showLogins = null;
     }
+    console.log(showLogins);
     let extras: NavigationExtras = {
       relativeTo: this.activatedRoute,
       queryParams: { showLogins: showLogins },
       queryParamsHandling: 'merge',
     };
-    this.router.navigate(['ttt'], extras);
+    this.router.navigate([], extras);
   }
 
-  evalSelection()
+  private evalSelection()
   {
     console.log('evalSelection:');
     let selection = this.showLoginsAsString;
@@ -125,7 +122,7 @@ export class LoginSelectorComponent implements OnInit {
 
   }
 
-  getShortestLoginSelection() {
+  private getShortestLoginSelection() {
     const numAll = this.logins.length;
     const numSelected = this.showLoginsAsString.split(',').length;
     const numDeselected = numAll - numSelected;
@@ -137,13 +134,51 @@ export class LoginSelectorComponent implements OnInit {
     }
   }
 
-  getDeselectedLogins() {
+  private getSelectedLogins() {
+    let selectedLogins = [];
+    for (let login of this.logins) {
+      if (this.selectedLogins[login.name]) {
+        selectedLogins.push(login.name);
+      }
+    }
+    return selectedLogins;
+  }
+
+  private getDeselectedLogins() {
     let deselectedLogins = [];
     for (let login of this.logins) {
-      if (!this.selectedLogins[login]) {
-        deselectedLogins.push(login);
+      if (!this.selectedLogins[login.name]) {
+        deselectedLogins.push(login.name);
       }
     }
     return deselectedLogins;
+  }
+
+  private getLogins(): void {
+    this.loginService.getLogins().subscribe(logins => {
+      console.log(`got ${logins.length} logins`);
+      this.updateLoginsAndHelpers(logins);
+      let params = this.activatedRoute.snapshot.queryParamMap;
+      console.log(params);
+      this.parseQueryParams(params);
+    });
+  }
+
+  private updateLoginsAndHelpers(logins: Login[]) {
+    console.log('updateLoginsAndHelpers:');
+    console.log(logins);
+    this.logins = logins;
+    this.showAllLoginsAsString = this.getAllLoginNames().join(',');
+    this.showDefaultLoginsAsString = this.showAllLoginsAsString;
+    console.log(`showAllLoginsAsString='${this.showAllLoginsAsString}'`);
+    console.log(`showDefaultLoginsAsString='${this.showDefaultLoginsAsString}'`);
+  }
+
+  private getAllLoginNames() {
+    let loginNames = [];
+    for (let login of this.logins) {
+      loginNames.push(login.name);
+    }
+    return loginNames;
   }
 }

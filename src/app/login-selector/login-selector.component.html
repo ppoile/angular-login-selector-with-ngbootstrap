@@ -10,7 +10,7 @@
           <button type="button" class="btn btn-dark" (click)=onNone()>None</button>
           <div class="btn-group btn-group-toggle" (change)="onChange()">
             <label *ngFor="let login of logins" class="btn-light" ngbButtonLabel>
-              <input type="checkbox" ngbButton [(ngModel)]="selectedLogins[login]">{{login}}
+              <input type="checkbox" ngbButton [(ngModel)]="selectedLogins[login.name]">{{login.name}}
             </label>
           </div>
           <hr>
