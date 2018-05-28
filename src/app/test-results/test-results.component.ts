@@ -9,10 +9,5 @@ export class TestResultsComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-  }
-
-  onIssueHttpRequest() {
-    console.log('onIssueHttpRequest()...');
-  }
+  ngOnInit() { }
 }
